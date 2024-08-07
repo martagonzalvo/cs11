@@ -1,0 +1,11 @@
+#! /bin/sh
+
+output=`diff -qbB $1 $2`
+
+if [ $? -eq 0 ]
+then
+    echo Test succeeded.
+else
+    echo Test failed.
+fi
+

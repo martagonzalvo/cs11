@@ -1,0 +1,61 @@
+#! /usr/bin/env python3
+
+"""Test script for sorter program."""
+
+import sys, random, os, string
+from subprocess import getstatusoutput, getoutput
+
+
+nruns = 100  # number of times to run the program
+
+
+for i in range(nruns):
+    print('.', end='.')
+    sys.stdout.flush()
+    # Pick a random number between 2 and 32.
+    n = random.randint(2, 32)
+
+    # Generate n random integers in the range [-100, 100]
+    args = ''
+    argnums = []
+    for i in range(n):
+        num = random.randint(-100, 100)
+        args = args + str(num) + ' '
+        argnums.append(num)
+
+    # Make a command-line for the program.
+    # Run it in quiet mode.  This will catch most core dumps.
+    cmdline = './quicksorter -q {}'.format(args)
+    status, output = getstatusoutput(cmdline)
+    if output:
+        print(output, end='')
+
+    if status != 0:
+        print()
+        print(cmdline)
+        print('Test failed!')
+        sys.exit(1)
+
+    # Now run it in verbose mode.  This will catch invalid output.
+    cmdline = './quicksorter {}'.format(args)
+    output = getoutput(cmdline)
+    # Turn the output into a list.
+    output = list(map(int, output.split()))
+    # Sort the input numbers; this gives the desired output.
+    argnums.sort()
+
+    # Check that the output is valid.
+    if len(argnums) != len(output):
+        print()
+        print(cmdline)
+        print('Test failed!')
+        sys.exit(1)
+
+    for i in range(len(argnums)):
+        if argnums[i] != output[i]:
+            print()
+            print(cmdline)
+            print('Test failed!')
+            sys.exit(1)
+
+print('\nTest succeeded!')

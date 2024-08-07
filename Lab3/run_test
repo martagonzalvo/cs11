@@ -1,0 +1,291 @@
+#! /usr/bin/env python3
+"""Test script for sorter program."""
+
+import sys
+import os
+import string
+import random
+import re
+from subprocess import getstatusoutput
+
+print()
+print('-' * 70)
+print('This is the test script.')
+print('-' * 70)
+
+nruns = 100  # number of times to run the program
+
+print()
+print('STAGE 1: ')
+print('=======')
+print()
+print('These tests are expected to succeed.')
+print('You should see nothing but some lines of dots. ')
+print('If you see anything else, either the sort isn\'t working,')
+print('or the "-q" or "-b" options are not being handled correctly,')
+print('or you have some other problem (e.g. a core dump).')
+print()
+
+print('Testing minimum element sort:')
+print()
+
+# Test with the -q option:
+
+for i in range(nruns):
+    sys.stdout.write('.')
+    sys.stdout.flush()
+
+    # Pick a random number between 1 and 32.
+    n = random.randrange(1, 33)
+
+    # Generate n random integers in the range [-100, 100]
+    args = []
+    for i in range(n):
+        args.append(str(random.randrange(-100, 101)))
+
+    # Pick up to 3 -q's for inclusion in the command line.
+    m = random.randrange(1, 4)
+    for i in range(m):
+        args.append('-q')
+
+    # Mix 'em up.
+    random.shuffle(args)
+
+    # Make a command line for the program.
+    new_args = ' '.join(args)
+    cmdline = f'./sorter {new_args}'
+
+    status, output = getstatusoutput(cmdline)
+    if status != 0:
+        format_str = '\n\nERROR: The program invocation: \n\n{}' + \
+                     '\n\nexited abnormally.\n\n'
+        sys.stderr.write(format_str.format(cmdline))
+        sys.exit(1)
+    elif len(output) > 0:
+        format_str = '\n\nERROR: The program invocation: \n\n{}' + \
+                     '\n\ngave this erroneous output: \n\n{}\n\n'
+        sys.stderr.write(format_str.format(cmdline, output))
+        sys.exit(1)
+
+print()
+
+# Test without the -q option:
+
+for i in range(nruns):
+    sys.stdout.write('.')
+    sys.stdout.flush()
+
+    # Pick a random number between 1 and 32.
+    n = random.randrange(1, 33)
+
+    # Generate n random integers in the range [-100, 100]
+    args = []
+    for i in range(n):
+        args.append(str(random.randrange(-100, 101)))
+
+    # Mix 'em up.
+    random.shuffle(args)
+
+    # Sort them for later comparison.
+    sorted_args = list(map(int, args[:]))
+    sorted_args.sort()
+
+    # Make a command line for the program.
+    new_args = ' '.join(args)
+    cmdline = f'./sorter {new_args}'
+
+    status, output = getstatusoutput(cmdline)
+    if status != 0:
+        format_str = '\n\nERROR: The program invocation: \n\n{}' + \
+                     '\n\nexited abnormally.\n\n'
+        sys.stderr.write(format_str.format(cmdline))
+        sys.exit(1)
+    else:
+        sorted_output = list(map(int, output.split()))
+
+        if sorted_args != sorted_output:
+            format_str = '\n\nERROR: The program invocation: \n\n{}' + \
+                         '\n\ngave this erroneous output: \n\n{}\n\n'
+            sys.stderr.write(format_str.format(cmdline, output))
+            sys.exit(1)
+
+print()
+
+print()
+print('Testing bubble sort:')
+print()
+
+for i in range(nruns):
+    sys.stdout.write('.')
+    sys.stdout.flush()
+
+    # Pick a random number between 1 and 32.
+    n = random.randrange(1, 33)
+
+    # Generate n random integers in the range [-100, 100]
+    args = []
+    for i in range(n):
+        args.append(str(random.randrange(-100, 101)))
+
+    # Put the '-q' and '-b' arguments in the argument list.
+
+    # Pick up to 3 -q's for inclusion in the command line.
+    m = random.randrange(1, 4)
+    for i in range(m):
+        args.append('-q')
+
+    # Pick up to 3 -b's for inclusion in the command line.
+    m = random.randrange(1, 4)
+    for i in range(m):
+        args.append('-b')
+
+    # Mix 'em up.
+    random.shuffle(args)
+
+    # Make a command line for the program.
+    new_args = ' '.join(args)
+    cmdline = f'./sorter {new_args}'
+
+    status, output = getstatusoutput(cmdline)
+    if status != 0:
+        format_str = '\n\nERROR: The program invocation: \n\n{}' + \
+                     '\n\nexited abnormally.\n\n'
+        sys.stderr.write(format_str.format(cmdline))
+        sys.exit(1)
+    elif len(output) > 0:
+        format_str = '\n\nERROR: The program invocation: \n\n\t{}' + \
+                     '\n\ngave this erroneous output: \n\n{}\n\n\n'
+        sys.stderr.write(format_str.format(cmdline, output))
+        sys.exit(1)
+
+print()
+
+for i in range(nruns):
+    sys.stdout.write('.')
+    sys.stdout.flush()
+
+    # Pick a random number between 1 and 32.
+    n = random.randrange(1, 33)
+
+    # Generate n random integers in the range [-100, 100]
+    args = []
+    for i in range(n):
+        args.append(str(random.randrange(-100, 101)))
+
+    # Sort them for later comparison.
+    sorted_args = list(map(int, args[:]))
+    sorted_args.sort()
+
+    # Pick up to 3 -b's for inclusion in the command line.
+    m = random.randrange(1, 4)
+    for i in range(m):
+        args.append('-b')
+
+    # Mix 'em up.
+    random.shuffle(args)
+
+    # Make a command line for the program.
+    new_args = ' '.join(args)
+    cmdline = f'./sorter {new_args}'
+
+    status, output = getstatusoutput(cmdline)
+    if status != 0:
+        format_str = '\n\nERROR: The program invocation: \n\n{}' + \
+                     '\n\nexited abnormally.\n\n'
+        sys.stderr.write(format_str.format(cmdline))
+        sys.exit(1)
+    else:
+        sorted_output = list(map(int, output.split()))
+
+        if sorted_args != sorted_output:
+            format_str = '\n\nERROR: The program invocation: \n\n{}' + \
+                         '\n\ngave this erroneous output: \n\n{}\n\n'
+            sys.stderr.write(format_str.format(cmdline, output))
+            sys.exit(1)
+
+print()
+
+print()
+print('STAGE 2: ')
+print('=======')
+print()
+print('These tests are expected to fail.')
+print('The test script will supply invalid input to your program.')
+print('This should generate a usage message.')
+print('If your program doesn\'t generate a proper usage message, '
+      'it\'s an error.')
+print('If all is well, you will just see some lines of dots.')
+print()
+
+for i in range(nruns):
+    sys.stdout.write('.')
+    sys.stdout.flush()
+
+    # Pick a random number between 33 and 100.
+    n = random.randrange(33, 101)
+
+    # Generate n random integers in the range [-100, 100]
+    args = []
+    for i in range(n):
+        args.append(str(random.randrange(-100, 101)))
+
+    # Pick up to 3 -q's for inclusion in the command line.
+    m = random.randrange(1, 4)
+    for i in range(m):
+        args.append('-q')
+
+    # Mix 'em up.
+    random.shuffle(args)
+
+    # Make a command-line for the program.
+    new_args = ' '.join(args)
+    cmdline = f'./sorter {new_args}'
+
+    status, output = getstatusoutput(cmdline)
+    match = re.search('usage', output, re.I)
+    if (len(output) == 0) or not match:
+        format_str = '\n\nERROR: The invalid program invocation: \n\n{}' + \
+                     '\n\ndidn\'t print a usage message.\n\n'
+        sys.stderr.write(format_str.format(cmdline))
+        sys.exit(1)
+
+print()
+
+for i in range(nruns):
+    sys.stdout.write('.')
+    sys.stdout.flush()
+
+    args = []
+
+    # Pick up to 3 -q's for inclusion in the command line.
+    m = random.randrange(0, 4)
+    for i in range(m):
+        args.append('-q')
+
+    # Pick up to 3 -b's for inclusion in the command line.
+    m = random.randrange(0, 4)
+    for i in range(m):
+        args.append('-b')
+
+    # Mix 'em up.
+    random.shuffle(args)
+
+    # Make a command-line for the program.
+    new_args = ' '.join(args)
+    cmdline = f'./sorter {new_args}'
+
+    status, output = getstatusoutput(cmdline)
+    match = re.search('usage', output, re.I)
+    if (len(output) == 0) or not match:
+        format_str = '\n\nERROR: The invalid program invocation: \n\n{}' + \
+                     '\n\ndidn\'t print a usage message.\n\n'
+        sys.stderr.write(format_str.format(cmdline))
+        sys.exit(1)
+
+
+print()
+print()
+print('-' * 70)
+print('ALL TESTS PASSED.')
+print('-' * 70)
+print()

@@ -1,0 +1,13 @@
+#! /usr/bin/env python3
+
+import sys
+from subprocess import getoutput
+
+output = getoutput("./bci factorial.bcm")
+
+if output != "3628800":
+    print("test failed!")
+else:
+    print("test passed!")
+
+

@@ -1,0 +1,4 @@
+- Do we need to comment code like today's assignment? (not a lot of explanation needed) YES
+- Did not receive codePost email-invite code?- SEND email
+- need to check input is actually 1 word? - nothing this assignment
+- ok truncation when getting integer 1-10? (int)? yes
